@@ -38,7 +38,8 @@ exports.handleRequest = function (req, res) {
         console.log(urlText)
       });
       req.on('end', function() {
-        fs.appendFile(archive.paths.list, urlText + "\n", function (err,data) {
+        var filePath = path.join(__dirname, '../archives/sites.txt');
+        fs.appendFile(filePath, req._postData.url + "\n", function (err,data) {
           if (err) throw err;
           console.log('It\'s saved!');
           statusCode = 302;
