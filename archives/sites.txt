@@ -2,3 +2,7 @@ www.google.com
 
 url=www.example.com
 www.example.com
+www.example.com
+ww.google.com
+ww.google.com
+www.google.com

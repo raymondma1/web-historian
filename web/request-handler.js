@@ -2,6 +2,7 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var httpHelpers = require('./http-helpers.js');
 var fs = require('fs');
+var querystring = require('querystring');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
@@ -37,15 +38,27 @@ exports.handleRequest = function (req, res) {
         urlText += chunk;
         console.log(urlText)
       });
+
       req.on('end', function() {
+        var queries = querystring.parse(urlText);
+
         var filePath = path.join(__dirname, '../archives/sites.txt');
-        fs.appendFile(filePath, req._postData.url + "\n", function (err,data) {
+        fs.appendFile(filePath, queries.url + "\n", function (err,data) {
           if (err) throw err;
           console.log('It\'s saved!');
           statusCode = 302;
-          res.writeHead(statusCode, httpHelpers.headers);
-          console.log(data);
-          res.end(data);
+          // res.writeHead(statusCode, httpHelpers.headers);
+          // console.log(data);
+          // res.end(data);
+          var testPath  = path.join(__dirname, '../archives/sites/www.google.com');
+          fs.readFile(testPath, {encoding:"utf8"}, function(err, data){
+            if(err){
+              throw err;
+            }
+            httpHelpers.headers['Content-Type'] = "text/html";
+            res.writeHead(statusCode, httpHelpers.headers);
+            res.end(data);
+          });
           //console.log(req._postData.url);
        });
       });
